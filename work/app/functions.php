@@ -62,7 +62,19 @@ function toggleTodo($pdo)
     return;
   }
 
-  $stmt = $pdo->prepare("UODATE todos SET is_done = NOT is_done WHERE id = ;id");
+  $stmt = $pdo->prepare("UPDATE todos SET is_done = NOT is_done WHERE id = :id");
+  $stmt->bindValue('id', $id, PDO::PARAM_INT);
+  $stmt->execute();
+}
+
+function deleteTodo($pdo)
+{
+  $id = filter_input(INPUT_POST, 'id');
+  if (empty($id)) {
+    return;
+  }
+
+  $stmt = $pdo->prepare("DELETE FROM todos WHERE Id = :id");
   $stmt->bindValue('id', $id, PDO::PARAM_INT);
   $stmt->execute();
 }
