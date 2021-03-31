@@ -1,10 +1,5 @@
 <?php
 
-function h($str)
-{
-  return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
-}
-
 function createToken()
 {
   if (!isset($_SESSION['token'])) {
