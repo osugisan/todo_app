@@ -20,3 +20,13 @@
     });
   });
 }
+
+{
+  const purge = document.querySelector('.purge');
+  purge.addEventListener('click', () => {
+    if (!confirm('Are you sure?')) {
+      return;
+    }
+    purge.parentNode.submit();
+  });
+}
