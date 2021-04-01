@@ -20,7 +20,9 @@ class Todo
     
       switch ($action) {
         case 'add':
-          $this->add();
+          $id = $this->add();
+          header('Content-Type: application/json');
+          echo json_encode(['id' => $id]);
           break;
         case 'toggle':
           $this->toggle();
@@ -49,6 +51,7 @@ class Todo
     $stmt = $this->pdo->prepare("INSERT INTO todos (title) VALUES (:title)");
     $stmt->bindValue('title', $title, \PDO::PARAM_STR);
     $stmt->execute();
+    return (int) $this->pdo->lastInsertId();
   }
   
   private function toggle()
@@ -70,7 +73,7 @@ class Todo
       return;
     }
   
-    $stmt = $this->pdo->prepare("DELETE FROM todos WHERE Id = :id");
+    $stmt = $this->pdo->prepare("DELETE FROM todos WHERE id = :id");
     $stmt->bindValue('id', $id, \PDO::PARAM_INT);
     $stmt->execute();
   }
@@ -83,7 +86,7 @@ class Todo
   public function getAll()
   {
     $stmt = $this->pdo->query("SELECT * FROM todos ORDER BY id DESC");
-    $todos = $stmt->fetchall();
+    $todos = $stmt->fetchAll();
     return $todos;
   }
 
