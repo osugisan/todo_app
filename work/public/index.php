@@ -1,33 +1,15 @@
 <?php
 require_once(__DIR__ . '/../app/config.php');
 
-createToken();
+use MyApp\Database;
+use MyApp\Todo;
+use MyApp\Utils;
 
-$pdo = getPdoInstance();
+$pdo = Database::getInstance();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  validateToken();
-  $action = filter_input(INPUT_GET, 'action');
-
-  switch ($action) {
-    case 'add':
-      addTodo($pdo);
-      break;
-    case 'toggle':
-      toggleTodo($pdo);
-      break;
-    case 'delete':
-      deleteTodo($pdo);
-      break;
-    default:
-      exit;
-  }
-
-  header('Location: ' . SITE_URL);
-  exit;
-}
-
-$todos = getTodos($pdo);
+$todo = new Todo($pdo);
+$todo->processPost();
+$todos = $todo->getAll();
 
 ?>
 
@@ -41,7 +23,13 @@ $todos = getTodos($pdo);
 </head>
 <body>
   <main>
-    <h1>Todos</h1>
+    <header>
+      <h1>Todos</h1>
+      <form action="?action=purge" method="post">
+        <span class="purge">Purge</span>
+        <input type="hidden" name="token" value="<?= Utils::h($_SESSION['token']); ?>">
+      </form>
+    </header>
 
     <form action="?action=add" method="post">
       <input type="text" name="title" placeholder="Type new todo.">
