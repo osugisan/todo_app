@@ -35,7 +35,6 @@ class Todo
           exit;
       }
     
-      header('Location: ' . SITE_URL);
       exit;
     }
   }
