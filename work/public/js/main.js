@@ -4,6 +4,7 @@
   const checkboxes = document.querySelectorAll('input[type="checkbox"]');
   checkboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
+
       fetch('?action=toggle', {
         method: 'POST',
         body: new URLSearchParams({
@@ -11,8 +12,6 @@
           token: checkbox.dataset.token,
         }),
       });
-
-      checkbox.nextElementSibling.classList.toggle('done');
     });
   });
 }
@@ -24,7 +23,16 @@
       if (!confirm('Are you sure?')) {
         return;
       }
-      span.parentNode.submit();
+
+      fetch('?action=delete', {
+        method: 'POST',
+        body: new URLSearchParams({
+          id: span.dataset.id,
+          token: span.dataset.token,
+        }),
+      });
+
+      span.parentNode.remove();
     });
   });
 }
@@ -35,6 +43,14 @@
     if (!confirm('Are you sure?')) {
       return;
     }
-    purge.parentNode.submit();
+
+    fetch('?action=purge', {
+      method: 'POST',
+      body: new URLSearchParams({
+        token: purge.dataset.token,
+      }),
+    });
+
+    
   });
 }
